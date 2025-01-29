@@ -1,4 +1,7 @@
 // background.js
+
+//MAIN CODE 
+
 let isScanning = true;
 let detectedUrls = new Set();
 let ports = new Set();
@@ -91,6 +94,8 @@ function broadcastStatus() {
 
 // Check URL with VirusTotal API
 async function checkWithVirusTotal(url) {
+  if (!isScanning) return false;
+  
   try {
     const params = new URLSearchParams({
       apikey: VIRUSTOTAL_API_KEY,
@@ -112,6 +117,8 @@ async function checkWithVirusTotal(url) {
 
 // Check URL with Ollama LLM
 async function checkWithLLM(url) {
+  if (!isScanning) return false;
+  
   try {
     const response = await fetch('http://localhost:11434/api/generate', {
       method: 'POST',
@@ -148,6 +155,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         broadcastStatus();
         sendResponse({ success: true });
       });
+    } else {
+      sendResponse({ success: false, reason: 'scanning_disabled' });
+    }
+    return true;
+  }
+  
+  if (request.action === 'openWarningPage') {
+    if (isScanning) {
+      chrome.tabs.create({
+        url: `warning.html?url=${encodeURIComponent(request.url)}`
+      });
     }
     return true;
   }
@@ -155,6 +173,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // Process URLs and update UI
 async function checkUrls(urls, tabId) {
+  if (!isScanning) return;
+
   for (const url of urls) {
     // Skip if URL is already detected as suspicious
     if (detectedUrls.has(url)) continue;
@@ -178,8 +198,10 @@ async function checkUrls(urls, tabId) {
 
 // Highlight suspicious URL in content
 function highlightUrl(url, tabId) {
+  if (!isScanning) return;
+
   chrome.tabs.sendMessage(tabId, {
-    action: 'highlightUrl',
+    action: 'highlightPhishingUrl',
     url: url
   });
   
@@ -198,3 +220,6 @@ chrome.runtime.onInstalled.addListener(() => {
   isScanning = true;
   detectedUrls.clear();
 });
+
+
+
