@@ -3,10 +3,10 @@
     "name": "Phishing URL Detector",
     "version": "1.0.0",
     "icons":{
-        "16": "check2.PNG",
-    "32": "check2.PNG",
-    "48": "check2.PNG",
-    "128": "check2.PNG"
+        "16": "logopish.PNG",
+    "32": "logopish.PNG",
+    "48": "logopish.PNG",
+    "128": "logopish.PNG"
     },
     "description": "Detects potential phishing URLs using VirusTotal API and LLM analysis",
     "permissions": [
@@ -15,7 +15,7 @@
       "storage",
       "scripting"
     ],
-    
+
     "host_permissions": [
       "<all_urls>"
     ],
