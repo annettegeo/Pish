@@ -4,8 +4,6 @@ let port = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   const statusElement = document.getElementById('status');
-  const startButton = document.getElementById('start');
-  const stopButton = document.getElementById('stop');
   const exitButton = document.getElementById('exit');
 
   // Connect to background script
@@ -14,38 +12,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle messages from background script
   port.onMessage.addListener((msg) => {
     if (msg.type === 'scanningStatus') {
-      updateStatus(msg.isScanning, msg.detectedUrls || []);
+      updateStatus(msg.detectedUrls || []);
     }
   });
 
-  function updateStatus(isScanning, detectedUrls) {
-    if (isScanning) {
-      if (detectedUrls.length > 0) {
-        statusElement.innerHTML = `
-          <p class="warning">⚠️ Detected ${detectedUrls.length} suspicious URL${detectedUrls.length > 1 ? 's' : ''}:</p>
-          <ul style="text-align: left; max-height: 100px; overflow-y: auto;">
-            ${detectedUrls.map(url => `<li style="word-break: break-all;">${url}</li>`).join('')}
-          </ul>
-        `;
-      } else {
-        statusElement.textContent = 'Actively scanning... No suspicious URLs detected';
-      }
-      startButton.disabled = true;
-      stopButton.disabled = false;
+  function updateStatus(detectedUrls) {
+    if (detectedUrls.length > 0) {
+      statusElement.innerHTML = `
+        <p class="warning">⚠️ Detected ${detectedUrls.length} suspicious URL${detectedUrls.length > 1 ? 's' : ''}:</p>
+        <ul style="text-align: left; max-height: 100px; overflow-y: auto;">
+          ${detectedUrls.map(url => `<li style="word-break: break-all;">${url}</li>`).join('')}
+        </ul>
+      `;
     } else {
-      statusElement.textContent = 'Scanning is paused';
-      startButton.disabled = false;
-      stopButton.disabled = true;
+      statusElement.textContent = 'Actively scanning... No suspicious URLs detected';
     }
   }
-
-  startButton.addEventListener('click', () => {
-    port.postMessage({ action: 'startScanning' });
-  });
-
-  stopButton.addEventListener('click', () => {
-    port.postMessage({ action: 'stopScanning' });
-  });
 
   // Enhanced exit button functionality
   exitButton.addEventListener('click', () => {
@@ -86,5 +68,3 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 });
-
-//hello

@@ -1,16 +1,12 @@
 //content.js
 //THIS IS THE MAIN CODE
-
-// Global variable to track scanning status
+// Global variable to track scanning status (always true now)
 let isScanning = true;
 
 // Function to extract all the URLs on the page
 function getUrlsFromPage() {
   let urls = [];
   
-  // Only proceed if scanning is enabled
-  if (!isScanning) return urls;
-
   // Access the DOM to get all anchor tags (<a>) on the page
   let links = document.querySelectorAll('a');
 
@@ -43,12 +39,10 @@ function getUrlsFromPage() {
 
 // Function to scan for URLs on the page and send them for checking
 function scanForUrls() {
-  if (!isScanning) return;
-
   // Get all URLs from the page using `getUrlsFromPage`
   const urls = getUrlsFromPage();
 
-  // Send URLs to the background script for checking only if scanning is enabled
+  // Send URLs to the background script for checking
   if (urls.length > 0) {
     chrome.runtime.sendMessage({
       action: 'checkUrls',
@@ -56,24 +50,18 @@ function scanForUrls() {
     });
   }
 
-  // Highlight URLs only if scanning is enabled
-  if (isScanning) {
-    highlightAllUrls();
-  }
+  // Highlight all URLs
+  //highlightAllUrls();
 }
 
 // Function to highlight a specific URL element
 function highlightUrl(element) {
-  if (!isScanning) return;
-  
   element.style.backgroundColor = '#ffff00';
   element.style.textDecoration = 'underline wavy red';
 }
 
 // Function to highlight all URLs on the screen with neon yellow
-function highlightAllUrls() {
-  if (!isScanning) return;
-
+/*function highlightAllUrls() {
   const links = document.querySelectorAll('a');
   links.forEach(link => {
     link.style.backgroundColor = 'neonyellow';
@@ -89,7 +77,7 @@ function highlightAllUrls() {
     element.style.border = '1px solid black';
     element.style.padding = '2px';
   });
-}
+}*/
 
 // Function to remove all highlights
 function removeHighlights() {
@@ -112,47 +100,40 @@ function removeHighlights() {
 
 // Listen for messages from the background script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  switch (request.action) {
-    case 'startScanning':
-      isScanning = true;
-      scanForUrls(); // Start scanning immediately when enabled
-      break;
-      
-    case 'stopScanning':
-      isScanning = false;
-      removeHighlights(); // Remove all highlights when scanning is stopped
-      break;
-      
-    case 'highlightPhishingUrl':
-      if (isScanning) {
-        const links = document.getElementsByTagName('a');
-        for (let link of links) {
-          if (link.href === request.url) {
-            highlightUrl(link);
-            
-            // Add a click event listener to show a warning page
-            link.addEventListener('click', (e) => {
-              if (isScanning) {
-                e.preventDefault();
-                chrome.runtime.sendMessage({
-                  action: 'openWarningPage',
-                  url: link.href
-                });
-              }
-            });
-          }
-        }
+  if (request.action === 'highlightPhishingUrl') {
+    const links = document.getElementsByTagName('a');
+    for (let link of links) {
+      if (link.href === request.url) {
+        highlightUrl(link);
+        
+        // Add a click event listener to show a warning page
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          chrome.runtime.sendMessage({
+            action: 'openWarningPage',
+            url: link.href
+          });
+        });
       }
-      break;
+    }
   }
 });
 
-// Start initial scan when the page loads (this will respect the isScanning flag)
+// Start initial scan when the page loads
 scanForUrls();
 
-// Set up periodic scanning (only runs if isScanning is true)
-setInterval(scanForUrls, 5000); // Scan every 5 seconds
+// Set up periodic scanning
+//setInterval(scanForUrls, 5000); // Scan every 5 seconds changed this to try for better cpu usage 
+let lastScanTime = 0;
+document.addEventListener('scroll', () => {
+    let now = Date.now();
+    if (now - lastScanTime > 30000) { // Scan every 30 seconds max
+        scanForUrls();
+        lastScanTime = now;
+    }
+});
 
+//hello
 
 
 
