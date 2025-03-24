@@ -1,83 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Phishing URL Detector</title>
-  <style>
-    body {
-      width: 550px;
-      height: 200px;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    h1, h2 {
-      margin: 10px 0;
-    }
-    .warning {
-      color: red;
-      font-weight: bold;
-    }
-    #status {
-      margin: 20px 0;
-      font-size: 16px;
-      font-weight: bold;
-      color: #555;
-    }
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      min-width: 100px;
-    }
-    .exit-button {
-      background-color: #f44336;
-      color: white;
-      transition: all 0.3s ease;
-      border: 2px solid #d32f2f;
-      position: relative;
-      overflow: hidden;
-    }
-    .exit-button:hover {
-      background-color: #d32f2f;
-      transform: scale(1.05);
-    }
-    .exit-button:active {
-      transform: scale(0.95);
-    }
-    .exit-button::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: width 0.3s, height 0.3s;
-    }
-    .exit-button:hover::after {
-      width: 200%;
-      height: 200%;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Phishing URL Detector</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>HELLO</h1>
-  <h2>Phishing URL Detector</h2>
-  <div id="status">Scanning for suspicious URLs...</div>
-  <div class="button-container">
-    <button id="exit" class="exit-button">Exit</button>
+  <div class="popup-container">
+    <div id="normal-state">
+      <h1>SafeLink</h1>
+      <h2>Phishing URL Detector</h2>
+      <p>Scanning for suspicious URLs...</p>
+    </div>
+
+    <div id="alert-container" class="hidden">
+      <div class="alert-content">
+        <h1 class="extension-name">SafeLink</h1>
+        <div class="alert-header">
+          <span class="alert-symbol">&#x26A0;&#xFE0F;</span>
+          <h2 id="alert-title"><span class="alert-emphasis">Alert!</span> <span id="alert-message"></span></h2>
+        </div>
+        <div id="urls-list"></div>
+        <button id="view-details-btn">View Details</button>
+        <button id="exit-btn">Exit</button>
+      </div>
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>

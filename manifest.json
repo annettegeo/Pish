@@ -22,7 +22,8 @@
   "host_permissions": [
     "<all_urls>",
     "*://*.virustotal.com/*",
-    "https://api.groq.com/*"
+    "https://api.groq.com/*",
+    "https://gcohsrptxssxhpafwvvj.supabase.co/*"
   ],
   "background": {
     "service_worker": "background.js"

@@ -1,0 +1,156 @@
+body {
+  width: 400px;  /* Increased from 300px */
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.hidden {
+  display: none;
+}
+
+.url-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.url-item:not(:last-child) {
+  border-bottom: 1px solid #ffcdd2;
+}
+
+button {
+  margin: 5px;
+  padding: 5px 10px;
+}
+
+#normal-state {
+  text-align: center;
+}
+
+#alert-container {
+  background-color: #ffe6e6;
+   /* //#ffe6e6 #B6D0E */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#urls-list {
+  display: none;
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#urls-list.visible {
+  display: block;
+}
+
+#view-details-btn {
+  width: 100%;
+  padding: 8px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+#view-details-btn:hover {
+  background-color: #ff5555;
+}
+
+.alert-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.alert-symbol {
+  font-size: 24px;
+}
+
+.alert-emphasis {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+#alert-title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.extension-name {
+  font-size: 24px;
+  color: #333;
+  margin: 0 0 15px 0;
+  text-align: center;
+}
+
+.url-text {
+  word-break: break-all;
+  margin-right: 8px;
+  font-size: 12px;
+  flex: 1;
+}
+
+.unflag-btn {
+  min-width: 50px;  /* Decreased from 60px */
+  padding: 4px 8px !important;  /* Smaller padding */
+  font-size: 11px;  /* Smaller font size */
+  margin-left: 8px;
+  background-color: #00A36C;
+  /* #50C878 */
+  /* #ff4444 */
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.unflag-btn:hover {
+  background-color: #ff5555;
+}
+
+.ip-data {
+  background-color: white !important;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+
+.port-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.port-box {
+  background-color: #3b82f6;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ip-box {
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #374151;
+}
