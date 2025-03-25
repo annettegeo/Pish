@@ -1,19 +1,22 @@
 body {
-  width: 400px;  /* Increased from 300px */
-  padding: 10px;
+  width: 550px;  /* Increased from 500px for more space */
+  padding: 15px;
   font-family: Arial, sans-serif;
 }
 
 .hidden {
   display: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease-in-out;
 }
 
 .url-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 8px;
-  border-bottom: 1px solid #eee;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .url-item:not(:last-child) {
@@ -27,6 +30,7 @@ button {
 
 #normal-state {
   text-align: center;
+  transition: all 0.3s ease-in-out;
 }
 
 #alert-container {
@@ -34,6 +38,7 @@ button {
    /* //#ffe6e6 #B6D0E */
   padding: 10px;
   border-radius: 5px;
+  transition: all 0.3s ease-in-out;
 }
 
 #urls-list {
@@ -87,31 +92,32 @@ button {
 }
 
 .extension-name {
-  font-size: 24px;
+  font-size: 32px; /* Increased size to match logo */
   color: #333;
-  margin: 0 0 15px 0;
-  text-align: center;
+  margin: 0;
 }
 
 .url-text {
-  word-break: break-all;
-  margin-right: 8px;
-  font-size: 12px;
   flex: 1;
+  font-size: 14px;
+  color: #333;
+  word-break: break-all;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border-left: 4px solid #dc3545;
 }
 
 .unflag-btn {
-  min-width: 50px;  /* Decreased from 60px */
-  padding: 4px 8px !important;  /* Smaller padding */
-  font-size: 11px;  /* Smaller font size */
-  margin-left: 8px;
-  background-color: #00A36C;
-  /* #50C878 */
-  /* #ff4444 */
-  color: white;
-  border: none;
-  border-radius: 3px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  background-color: #dc3545;
+  color: white;
 }
 
 .unflag-btn:hover {
@@ -119,11 +125,28 @@ button {
 }
 
 .ip-data {
-  background-color: white !important;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  padding: 0.75rem;
-  margin-top: 0.5rem;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  font-size: 13px;
+  display: none;
+}
+
+.ip-data.visible {
+  display: block;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .space-y-2 > * + * {
@@ -153,4 +176,240 @@ button {
   border-radius: 4px;
   font-family: monospace;
   color: #374151;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.logo-image {
+  height: 40px; /* Increased size */
+  width: auto;
+  object-fit: contain;
+}
+
+/* Add smooth animation for popup opening */
+.popup-container {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.progress-container {
+  min-width: 120px;
+  height: 20px;
+  background: radial-gradient(circle, #1b2735, #090a0f);
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, #00f260, #0575e6);
+  border-radius: 30px;
+  animation: grow 3s ease-in-out forwards;
+  box-shadow:
+    0 0 15px #00f260,
+    0 0 30px #0575e6;
+}
+
+.progress-bar::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent);
+  opacity: 0.5;
+  animation: ripple 3s infinite;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  z-index: 2;
+}
+
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: float 5s infinite ease-in-out;
+}
+
+@keyframes grow {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: var(--score-width, 40%);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+.particle:nth-child(1) {
+  top: 10%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+  top: 30%;
+  left: 70%;
+  animation-delay: 1s;
+}
+
+.particle:nth-child(3) {
+  top: 50%;
+  left: 50%;
+  animation-delay: 2s;
+}
+
+.particle:nth-child(4) {
+  top: 80%;
+  left: 40%;
+  animation-delay: 1.5s;
+}
+
+.particle:nth-child(5) {
+  top: 90%;
+  left: 60%;
+  animation-delay: 2.5s;
+}
+
+.suspicion-score-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.explanation-data {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  font-size: 13px;
+  display: none;
+}
+
+.explanation-data.visible {
+  display: block;
+  animation: slideDown 0.3s ease-out;
+}
+
+.explanation-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  background-color: #17a2b8;
+  color: white;
+}
+
+.explanation-btn:hover {
+  background-color: #e0a800;
+}
+
+/* URL header row with URL and percentage bar side by side */
+.url-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 15px;
+}
+
+/* Button row */
+.button-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+/* Button styling */
+.ip-info-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  background-color: #28a745;
+  color: white;
 }

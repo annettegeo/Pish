@@ -174,6 +174,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (container) {
         displayIpDataForUrl(msg.url, msg.data);
       }
+    } else if (msg.type === 'explanation') {
+      // Handle explanation response
+      const container = document.getElementById(`explanation-data-${encodeURIComponent(msg.url)}`);
+      if (container) {
+        displayExplanationForUrl(msg.url, msg.explanation);
+      }
     }
   });
 
@@ -186,26 +192,43 @@ document.addEventListener('DOMContentLoaded', () => {
       const alertMessage = `${detectedUrls.length} Phishing URL${detectedUrls.length > 1 ? 's' : ''} Detected!`;
       document.getElementById('alert-message').textContent = alertMessage;
 
-      // Update URLs list with unflag buttons and IP info button
+      // Update URLs list with unflag buttons, IP info button, and suspicion score
       urlsList.innerHTML = Array.from(detectedUrls)
-        .map(url => `
-          <div class="url-item flex flex-col p-2 mb-2 border-b border-gray-300">
-            <div class="flex justify-between items-center w-full">
-              <span class="url-text flex-grow truncate">${url}</span>
-              <div class="flex">
-                <button class="ip-info-btn bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2"
-                        data-url="${url}">
-                  IP Info
-                </button>
-                <button class="unflag-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                        data-url="${url}">
-                  Unflag
-                </button>
+        .map(url => {
+          const suspicionScore = urlDataMap[url]?.suspicionScore || 70;
+          
+          return `
+          <div class="url-item">
+            <div class="url-header">
+              <div class="url-text">${url}</div>
+              
+              <div class="progress-container">
+                <div class="progress-bar" style="width: ${suspicionScore}%"></div>
+                <div class="progress-text">${suspicionScore}%</div>
+                <div class="particles">
+                  <div class="particle"></div>
+                  <div class="particle"></div>
+                  <div class="particle"></div>
+                </div>
               </div>
             </div>
-            <div class="ip-data hidden mt-2 p-2 bg-gray-100 rounded" id="ip-data-${encodeURIComponent(url)}"></div>
+
+            <div class="button-container">
+              <button class="explanation-btn" data-url="${url}">
+                Explain
+              </button>
+              <button class="ip-info-btn" data-url="${url}">
+                IP Info
+              </button>
+              <button class="unflag-btn" data-url="${url}">
+                Unflag
+              </button>
+            </div>
+
+            <div class="explanation-data" id="explanation-data-${encodeURIComponent(url)}"></div>
+            <div class="ip-data" id="ip-data-${encodeURIComponent(url)}"></div>
           </div>
-        `).join('');
+        `}).join('');
 
       // Add event listeners to unflag buttons
       document.querySelectorAll('.unflag-btn').forEach(btn => {
@@ -231,28 +254,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
 
+      // Add event listeners to explanation buttons
+      document.querySelectorAll('.explanation-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const url = e.target.dataset.url;
+          const explanationContainer = document.getElementById(`explanation-data-${encodeURIComponent(url)}`);
+          
+          if (!explanationContainer.classList.contains('visible')) {
+            explanationContainer.classList.add('visible');
+            explanationContainer.innerHTML = '<p class="text-center">Loading explanation...</p>';
+            
+            if (urlDataMap[url] && urlDataMap[url].explanation) {
+              displayExplanationForUrl(url, urlDataMap[url].explanation);
+            } else {
+              port.postMessage({
+                action: 'getExplanation',
+                url: url
+              });
+            }
+          } else {
+            explanationContainer.classList.remove('visible');
+          }
+        });
+      });
+
       // Add event listeners to IP info buttons
       document.querySelectorAll('.ip-info-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
           const url = e.target.dataset.url;
           const ipDataContainer = document.getElementById(`ip-data-${encodeURIComponent(url)}`);
           
-          if (ipDataContainer.classList.contains('hidden')) {
-            ipDataContainer.classList.remove('hidden');
+          if (!ipDataContainer.classList.contains('visible')) {
+            ipDataContainer.classList.add('visible');
             ipDataContainer.innerHTML = '<p class="text-center">Loading IP data...</p>';
             
-            // Check if we already have data in urlDataMap
             if (urlDataMap[url] && urlDataMap[url].ipInfo) {
               displayIpDataForUrl(url, urlDataMap[url].ipInfo);
             } else {
-              // Request IP data through port connection
               port.postMessage({
                 action: 'getIpData',
                 url: url
               });
             }
           } else {
-            ipDataContainer.classList.add('hidden');
+            ipDataContainer.classList.remove('visible');
           }
         });
       });
@@ -349,6 +394,23 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error unflagging URL:', error);
         return false;
     }
+  }
+
+  // New function to display explanation
+  function displayExplanationForUrl(url, explanation) {
+    console.log("Displaying explanation:", explanation);
+    const explanationContainer = document.getElementById(`explanation-data-${encodeURIComponent(url)}`);
+    
+    if (!explanation) {
+      explanationContainer.innerHTML = '<p class="text-center">No explanation available for this URL</p>';
+    }
+
+    explanationContainer.innerHTML = `
+      <div class="text-sm space-y-2">
+        <h3 class="font-bold text-red-700">Why this URL is suspicious:</h3>
+        <p>${explanation}</p>
+      </div>
+    `;
   }
 
   // Add functionality for manual scanning
