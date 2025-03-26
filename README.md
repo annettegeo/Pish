@@ -1,26 +1,61 @@
-# Phishing Website Scanner
+# Phishing URL Detector
 
-A **Python-based phishing website detection tool** designed to identify and flag potentially malicious websites in real-time. This tool integrates **VirusTotal's API** for URL validation, utilizes **AI with a custom Machine Learning model** for dynamic threat detection, and monitors suspicious redirection patterns to enhance security.
-
----
+A Chrome extension designed to detect and warn users about potential phishing websites in real-time. It combines VirusTotal API analysis, AI-powered detection, and redirection monitoring to ensure safer browsing.
 
 ## 🚀 Features
 
-- **Real-Time Detection**: Identifies phishing websites by analyzing URLs in real-time.
-- **VirusTotal Integration**: Cross-references URLs with VirusTotal’s extensive database of flagged sites.
-- **AI-Powered Analysis**: Utilizes a custom **Machine Learning Model (LLM)** to dynamically analyze and flag suspicious URLs.
-- **Redirection Monitoring**: Tracks and evaluates redirection chains to detect phishing tactics.
-- **User Alerts**: Displays real-time alerts and warnings for potentially harmful sites.
-- **Browser Extension**: Lightweight and easy-to-use Chrome extension with minimal user interaction.
-
----
+- **Real-Time URL Scanning**: Detects phishing websites by analyzing URLs directly from the browser.
+- **VirusTotal Integration**: Cross-references URLs with VirusTotal’s extensive threat database.
+- **AI-Powered Analysis**: Uses a custom Machine Learning model for enhanced phishing detection.
+- **Redirection Monitoring**: Tracks and evaluates URL redirections to detect malicious behavior.
+- **IP Information Retrieval**: Displays the hostname, IP address, and open ports of a site.
+- **User Notifications**: Alerts users when a potentially harmful site is detected.
+- **Unflag Option**: Allows users to remove falsely flagged URLs.
+- **Suspicious URL Database**: Maintains a record of detected phishing URLs to optimize future scans.
+- **Progress Visualization**: Displays suspicion scores using a dynamic progress bar.
+- **Enhanced User Interface**: Provides a clear, interactive UI for viewing detected URLs and detailed reports.
 
 ## 🛠️ Technologies Used
 
-- **HTML**, **CSS**, **JavaScript** for front-end Chrome extension development.
-- **Python** for backend processing and Machine Learning model.
-- **VirusTotal API** for URL threat analysis.
-- **Machine Learning** algorithms for phishing detection.
+- **Frontend**: HTML, CSS, JavaScript (Chrome Extension UI)
+- **Backend**: Python (Machine Learning Model)
+- **API Integration**: VirusTotal API, Groq API
+- **Database**: Supabase (For storing phishing URLs)
+- **Networking**: WebRequest and WebNavigation permissions for URL tracking
 
----
 
+## 📦 Installation
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/phishing-url-detector.git
+    ```
+2. Navigate to the project directory.
+    ```bash
+    cd phishing-url-detector
+    ```
+3. Open Chrome and go to `chrome://extensions/`.
+4. Enable **Developer Mode**.
+5. Click **Load Unpacked** and select the project folder.
+
+## 🚦 Usage
+
+- Once installed, the extension will monitor active browser tabs.
+- It will notify you if it detects a suspicious URL.
+- You can view detailed information about flagged URLs using the popup UI.
+- The **IP Info** button will display relevant IP and port details.
+- If a URL is flagged falsely, use the **Unflag** option to mark it safe.
+
+## 🔐 Permissions Required
+
+- `activeTab`: Access the currently active tab for URL detection.
+- `notifications`: Display warnings for phishing attempts.
+- `storage`: Store flagged URLs for future reference.
+- `scripting`: Inject content scripts for analysis.
+- `webRequest` & `webNavigation`: Monitor URL requests for scanning.
+
+## ⚙️ API Configuration
+
+- **VirusTotal API**: Ensure you have an API key from [VirusTotal](https://www.virustotal.com/gui/join-us).
+- **Groq API**: Obtain a key for AI-based analysis.
+- **Supabase**: Set up a database instance to store and retrieve flagged URLs.
