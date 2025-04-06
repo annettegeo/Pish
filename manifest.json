@@ -1,32 +1,38 @@
 {
-    "manifest_version": 3,
-    "name": "Phishing URL Detector",
-    "version": "1.0.0",
-    "icons":{
-        "16": "logopish.PNG",
-    "32": "logopish.PNG",
-    "48": "logopish.PNG",
-    "128": "logopish.PNG"
-    },
-    "description": "Detects potential phishing URLs using VirusTotal API and LLM analysis",
-    "permissions": [
-      "activeTab",
-      "notifications",
-      "storage",
-      "scripting"
-    ],
+  "manifest_version": 3,
+  "name": "Phishing URL Detector",
+  "version": "1.0.0",
+  "icons":{
+      "16": "logopish.PNG",
+  "32": "logopish.PNG",
+  "48": "logopish.PNG",
+  "128": "logopish.PNG"
+  },
+  "description": "Detects potential phishing URLs using VirusTotal API and LLM analysis",
+  "permissions": [
+    "activeTab",
+    "notifications",
+    "storage",
+    "scripting",
+    "tabs",
+    "webRequest",
+      "webNavigation"
+  ],
 
-    "host_permissions": [
-      "<all_urls>"
-    ],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "content_scripts": [{
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
-    }],
-    "action": {
-      "default_popup": "popup.html"
-    }
+  "host_permissions": [
+    "<all_urls>",
+    "*://*.virustotal.com/*",
+    "https://api.groq.com/*",
+    "https://gcohsrptxssxhpafwvvj.supabase.co/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content.js"]
+  }],
+  "action": {
+    "default_popup": "popup.html"
   }
+}
