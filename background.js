@@ -1,17 +1,19 @@
+//Pish trail waala pish
+
 console.log("Background script is running!");
 
 let detectedUrls = new Set();
 let ports = new Set();
-const VIRUSTOTAL_API_KEY = '';
+const VIRUSTOTAL_API_KEY = ''; //your key
 const VIRUSTOTAL_API_URL = 'https://www.virustotal.com/api/v3/urls';
-const GROQ_API_KEY = "";
+const GROQ_API_KEY = ""; //your key
 
 // Store URL data including IP information
 let urlDataMap = new Map();
 
 // Supabase configuration
 const supabaseUrl = 'https://gcohsrptxssxhpafwvvj.supabase.co';
-const supabaseKey = '';
+const supabaseKey = ''; //your key
 
 // List of popular domains to check against for typosquatting
 const POPULAR_DOMAINS = [
@@ -155,7 +157,7 @@ async function detectTyposquatting(url) {
 }
 
 // Function to add URL to Supabase database
-async function addUrlToDatabase(url) {
+async function addUrlToDatabase(url, explanation, score) {
     try {
         const response = await fetch(`${supabaseUrl}/rest/v1/SuspiciousURL`, {
             method: 'POST',
@@ -165,7 +167,11 @@ async function addUrlToDatabase(url) {
                 'Content-Type': 'application/json',
                 'Prefer': 'return=representation'
             },
-            body: JSON.stringify({ url: url })
+            body: JSON.stringify({ 
+                url: url,
+                explain: explanation, // New column
+                score: score         // New column
+            })
         });
 
         if (!response.ok) {
@@ -173,7 +179,7 @@ async function addUrlToDatabase(url) {
         }
 
         const data = await response.json();
-        console.log('URL added to database:', data);
+        console.log('URL and details added to database:', data);
         return true;
     } catch (error) {
         console.error('Error adding URL to database:', error);
@@ -319,7 +325,16 @@ async function checkUrlInDatabase(url) {
         }
 
         const data = await response.json();
-        return data.length > 0;
+        if (data.length > 0) {
+            // Store the explanation and score in urlDataMap
+            if (!urlDataMap.has(url)) {
+                urlDataMap.set(url, {});
+            }
+            urlDataMap.get(url).explanation = data[0].explain;
+            urlDataMap.get(url).suspicionScore = data[0].score;
+            return true;
+        }
+        return false;
     } catch (error) {
         console.error('Error checking URL in database:', error);
         return false;
@@ -599,17 +614,18 @@ let urlCache = new Map();
 function calculateSuspicionScore(url, urlFeatures, typosquattingResult) {
     let score = 0;
     const weights = {
-        domainLength: 5,
-        specialChars: 10,
-        digits: 8,
-        ipAddress: 30,
-        dots: 5,
-        pathLength: 5,
-        queryLength: 5,
-        https: -15,
-        multiSubdomains: 15,
-        typosquatting: 35,
-        keywords: 20
+        domainLength: 5,         // +5 points if domain length > 20
+        specialChars: 10,        // 10 points per 5 special characters
+        digits: 8,              // 8 points per 5 digits
+        ipAddress: 35,          // Changed: 35 points if URL contains an IP address
+        dots: 5,                // 5 points per dot beyond 3
+        pathLength: 5,          // 5 points if path length > 50
+        queryLength: 5,         // 5 points if query length > 100
+        http: 30,              // Added: 30 points if site uses HTTP
+        multiSubdomains: 25,    // Changed: 25 points if more than 3 subdomains
+        typosquatting: 45,      // Changed: 45 points if typosquatting is detected
+        redirects: 30,          // Added: 30 points if redirects are detected
+        keywords: 20            // 20 points for suspicious keywords
     };
     
     // Base suspicious score starts at 20%
@@ -620,14 +636,27 @@ function calculateSuspicionScore(url, urlFeatures, typosquattingResult) {
     score += urlFeatures.numSpecialChars * weights.specialChars / 5;
     score += urlFeatures.numDigits * weights.digits / 5;
     if (urlFeatures.hasIPAddress) score += weights.ipAddress;
-    if (urlFeatures.numDots > 3) score += weights.dots * (urlFeatures.numDots - 2);
+    
+    // Check for subdomains (only if more than 3)
+    const subdomainCount = urlFeatures.numDots - 1;
+    if (subdomainCount > 3) {
+        score += weights.multiSubdomains;
+    }
+    
     if (urlFeatures.pathLength > 50) score += weights.pathLength;
     if (urlFeatures.queryLength > 100) score += weights.queryLength;
-    if (!urlFeatures.hasHTTPS) score += Math.abs(weights.https);
-    if (urlFeatures.hasMultiSubdomains) score += weights.multiSubdomains;
     
+    // Check for HTTP (non-HTTPS)
+    if (!urlFeatures.hasHTTPS) score += weights.http;
+    
+    // Check for typosquatting with higher weight
     if (typosquattingResult.isTyposquatting) {
         score += weights.typosquatting;
+    }
+    
+    // Check for redirects
+    if (urlFeatures.hasRedirects) {
+        score += weights.redirects;
     }
     
     // Check for suspicious keywords
@@ -663,7 +692,7 @@ async function generateExplanation(url, urlFeatures, typosquattingResult, score)
                 - Path Length: ${urlFeatures.pathLength}
                 - Query Length: ${urlFeatures.queryLength}
                 - Uses HTTPS: ${urlFeatures.hasHTTPS}
-                - Multiple Subdomains: ${urlFeatures.hasMultiSubdomains}
+                - Multiple Subdomains: more than 3 ${urlFeatures.hasMultiSubdomains}
                 ${typosquattingResult.isTyposquatting ? 
                     `- Typosquatting: Similar to ${typosquattingResult.originalDomain} (${typosquattingResult.type})` : 
                     '- Typosquatting: No significant similarity detected'}
@@ -672,6 +701,8 @@ async function generateExplanation(url, urlFeatures, typosquattingResult, score)
                 Start with the most concerning issues first.
                 Be specific about security risks.
                 Keep it brief but informative.`
+                           
+                
             }
         ];
 
@@ -1034,13 +1065,7 @@ async function checkUrls(urls, tabId) {
             console.log('URL found in SuspiciousURL database:', url);
             detectedUrls.add(url);
             
-            if (!urlDataMap.has(url)) {
-                urlDataMap.set(url, {
-                    suspicionScore: 75, // Default score for database entries
-                    explanation: "This URL was previously identified as suspicious in our database."
-                });
-            }
-            
+            // Data already loaded into urlDataMap by checkUrlInDatabase
             highlightUrl(url, tabId);
             updatedUrls = true;
             continue;
@@ -1055,7 +1080,7 @@ async function checkUrls(urls, tabId) {
             const explanation = await generateExplanation(url, urlFeatures, typosquattingResult, suspicionScore);
             
             detectedUrls.add(url);
-            await addUrlToDatabase(url);
+            await addUrlToDatabase(url, explanation, suspicionScore);
             
             if (!urlDataMap.has(url)) {
                 urlDataMap.set(url, {
@@ -1072,7 +1097,7 @@ async function checkUrls(urls, tabId) {
         const llmResult = await checkWithLLM(url);
         if (llmResult.isSuspicious) {
             detectedUrls.add(url);
-            await addUrlToDatabase(url);
+            await addUrlToDatabase(url, llmResult.explanation, llmResult.suspicionScore);
             
             if (!urlDataMap.has(url)) {
                 urlDataMap.set(url, {
@@ -1093,11 +1118,11 @@ async function checkUrls(urls, tabId) {
             const explanation = "This URL has been flagged as malicious by multiple security vendors on VirusTotal.";
             
             detectedUrls.add(url);
-            await addUrlToDatabase(url);
+            await addUrlToDatabase(url, explanation, Math.max(suspicionScore, 80));
             
             if (!urlDataMap.has(url)) {
                 urlDataMap.set(url, {
-                    suspicionScore: Math.max(suspicionScore, 80), // Minimum 80% if flagged by VirusTotal
+                    suspicionScore: Math.max(suspicionScore, 80),
                     explanation: explanation
                 });
             }
