@@ -4,16 +4,18 @@ console.log("Background script is running!");
 
 let detectedUrls = new Set();
 let ports = new Set();
-const VIRUSTOTAL_API_KEY = ''; //your key
+const VIRUSTOTAL_API_KEY = '';//Your key
+
 const VIRUSTOTAL_API_URL = 'https://www.virustotal.com/api/v3/urls';
-const GROQ_API_KEY = ""; //your key
+const GROQ_API_KEY = "";//Your key
+
 
 // Store URL data including IP information
 let urlDataMap = new Map();
 
 // Supabase configuration
 const supabaseUrl = 'https://gcohsrptxssxhpafwvvj.supabase.co';
-const supabaseKey = ''; //your key
+const supabaseKey = ''; //Your key
 
 // List of popular domains to check against for typosquatting
 const POPULAR_DOMAINS = [

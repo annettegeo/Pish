@@ -1,0 +1,13 @@
+.logo-image {
+    width: 48px;  /* adjust size as needed */
+    height: 48px;
+    margin-right: 10px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
