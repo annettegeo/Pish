@@ -1,61 +1,112 @@
-# Phishing URL Detector
+# SafeLink: Phishing URL Detector
 
-A Chrome extension designed to detect and warn users about potential phishing websites in real-time. It combines VirusTotal API analysis, AI-powered detection, and redirection monitoring to ensure safer browsing.
+A cross-platform Chrome extension built to detect and flag phishing websites in real-time. It uses a combination of VirusTotal and Groq API (Mistral SABA 24B), DNS analysis, and Shodan InternetDB to provide advanced threat detection for safer browsing.
+
+---
 
 ## 🚀 Features
 
-- **Real-Time URL Scanning**: Detects phishing websites by analyzing URLs directly from the browser.
-- **VirusTotal Integration**: Cross-references URLs with VirusTotal’s extensive threat database.
-- **AI-Powered Analysis**: Uses a custom Machine Learning model for enhanced phishing detection.
-- **Redirection Monitoring**: Tracks and evaluates URL redirections to detect malicious behavior.
-- **IP Information Retrieval**: Displays the hostname, IP address, and open ports of a site.
-- **User Notifications**: Alerts users when a potentially harmful site is detected.
-- **Unflag Option**: Allows users to remove falsely flagged URLs.
-- **Suspicious URL Database**: Maintains a record of detected phishing URLs to optimize future scans.
-- **Progress Visualization**: Displays suspicion scores using a dynamic progress bar.
-- **Enhanced User Interface**: Provides a clear, interactive UI for viewing detected URLs and detailed reports.
+* **Real-Time URL Scanning**: Instantly analyzes URLs visited in the browser.
+* **VirusTotal Integration**: Checks URLs against VirusTotal's threat database.
+* **AI-Powered Detection**: Uses Groq API with Mistral SABA 24B for intelligent threat classification.
+* **Redirection Tracking**: Monitors and evaluates redirection patterns for phishing signs.
+* **IP & Host Info**: Displays IP address, open ports, and hostname using DNS and Shodan InternetDB.
+* **User Notifications**: Alerts users if a phishing attempt is detected.
+* **Unflag URLs**: Option to remove false positives.
+* **Suspicious URL Storage**: Maintains a list of flagged URLs using Supabase.
+* **Suspicion Score Bar**: Visual indicator showing phishing probability.
+* **Simple UI**: Clean interface for quick information access.
 
-## 🛠️ Technologies Used
+---
 
-- **Frontend**: HTML, CSS, JavaScript (Chrome Extension UI)
-- **Backend**: Python (Machine Learning Model)
-- **API Integration**: VirusTotal API, Groq API
-- **Database**: Supabase (For storing phishing URLs)
-- **Networking**: WebRequest and WebNavigation permissions for URL tracking
+## 💻 OS Compatibility
 
+* **Windows**
+* **macOS**
+* **Linux**
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* HTML
+* CSS
+* JavaScript
+
+### Backend
+
+* Node.js
+
+### APIs & Tools
+
+* [VirusTotal API](https://www.virustotal.com/gui/join-us)
+* [Groq API (Mistral SABA 24B)](https://groq.com)
+* [Google DNS](https://dns.google/)
+* [Shodan InternetDB](https://internetdb.shodan.io)
+* Supabase (Database)
+
+### Extension Architecture
+
+* `manifest.json`
+* `content script`
+* `background script`
+* `popup script`
+
+### Development Tools
+
+* Visual Studio Code
+* GitHub
+
+---
 
 ## 📦 Installation
 
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/phishing-url-detector.git
-    ```
-2. Navigate to the project directory.
-    ```bash
-    cd phishing-url-detector
-    ```
-3. Open Chrome and go to `chrome://extensions/`.
-4. Enable **Developer Mode**.
-5. Click **Load Unpacked** and select the project folder.
+
+```bash
+git clone https://github.com/yourusername/safelink-url-detector.git
+```
+
+2. Navigate to the project directory:
+
+```bash
+cd safelink-url-detector
+```
+
+3. Open Chrome and go to `chrome://extensions/`
+4. Enable **Developer Mode**
+5. Click **Load Unpacked** and select the project folder
+
+---
 
 ## 🚦 Usage
 
-- Once installed, the extension will monitor active browser tabs.
-- It will notify you if it detects a suspicious URL.
-- You can view detailed information about flagged URLs using the popup UI.
-- The **IP Info** button will display relevant IP and port details.
-- If a URL is flagged falsely, use the **Unflag** option to mark it safe.
+* The extension monitors your browser in real-time.
+* If a phishing URL is detected, a warning alert is displayed.
+* View full URL info including redirections, IP, and suspicion score in the popup.
+* Use the **Unflag** button to mark safe URLs.
 
-## 🔐 Permissions Required
+---
 
-- `activeTab`: Access the currently active tab for URL detection.
-- `notifications`: Display warnings for phishing attempts.
-- `storage`: Store flagged URLs for future reference.
-- `scripting`: Inject content scripts for analysis.
-- `webRequest` & `webNavigation`: Monitor URL requests for scanning.
+## 🔐 Permissions
 
-## ⚙️ API Configuration
+* `activeTab`
+* `notifications`
+* `storage`
+* `scripting`
+* `webRequest`
+* `webNavigation`
 
-- **VirusTotal API**: Ensure you have an API key from [VirusTotal](https://www.virustotal.com/gui/join-us).
-- **Groq API**: Obtain a key for AI-based analysis.
-- **Supabase**: Set up a database instance to store and retrieve flagged URLs.
+---
+
+## ⚙️ API Keys Setup
+
+* **VirusTotal**: Get an API key from [VirusTotal](https://www.virustotal.com/gui/join-us).
+* **Groq (Mistral SABA 24B)**: Get an API key from [Groq](https://groq.com).
+* **Supabase**: Set up a Supabase project and configure the database.
+
+---
+
+> Stay safe while browsing with SafeLink: Your phishing detection companion 🚨
