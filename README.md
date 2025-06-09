@@ -111,13 +111,13 @@ cd safelink-url-detector
 ## Screenshots
 
 ### Detection
-![Detection](screenshot1.jpeg)
+![Detection](assets/screenshot1.jpeg)
 
 ### Notification
-![Notification](screenshot2.jpeg)
+![Notification](assets/screenshot2.jpeg)
 
 ### Result details
-![Result](screenshot3.jpeg)
+![Result](assets/screenshot3.jpeg)
 
 > Stay safe while browsing with SafeLink: Your phishing detection companion 🚨
 
