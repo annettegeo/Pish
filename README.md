@@ -108,5 +108,16 @@ cd safelink-url-detector
 * **Supabase**: Set up a Supabase project and configure the database.
 
 ---
+## Screenshots
+
+### Detection
+![Detection](screenshot1.jpeg)
+
+### Notification
+![Notification](screenshot2.jpeg)
+
+### Result details
+![Result](screenshot3.jpeg)
 
 > Stay safe while browsing with SafeLink: Your phishing detection companion 🚨
+
