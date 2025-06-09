@@ -1,4 +1,4 @@
-# SafeLink: Phishing URL Detector
+# SafeLink: Phishing URL Detector and IP Address & Open port Scanner
 
 A cross-platform Chrome extension built to detect and flag phishing websites in real-time. It uses a combination of VirusTotal and Groq API (Mistral SABA 24B), DNS analysis, and Shodan InternetDB to provide advanced threat detection for safer browsing.
 
