@@ -1,21 +1,18 @@
-//Pish trail waala pish
 
 console.log("Background script is running!");
 
 let detectedUrls = new Set();
 let ports = new Set();
-const VIRUSTOTAL_API_KEY = '';//Your key
-
+const VIRUSTOTAL_API_KEY = ''; // get your own virus total API key from https://www.virustotal.com/
 const VIRUSTOTAL_API_URL = 'https://www.virustotal.com/api/v3/urls';
-const GROQ_API_KEY = "";//Your key
-
+const GROQ_API_KEY = ""; // get your own Groq API key from https://groq.com/
 
 // Store URL data including IP information
 let urlDataMap = new Map();
 
 // Supabase configuration
 const supabaseUrl = 'https://gcohsrptxssxhpafwvvj.supabase.co';
-const supabaseKey = ''; //Your key
+const supabaseKey = ''; //get your own Supabase API key from https://app.supabase.io/project/gcohsrptxssxhpafwvvj/api/settings/api
 
 // List of popular domains to check against for typosquatting
 const POPULAR_DOMAINS = [
