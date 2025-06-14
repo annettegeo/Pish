@@ -45,7 +45,7 @@ A cross-platform Chrome extension built to detect and flag phishing websites in 
 * [Groq API (Mistral SABA 24B)](https://groq.com)
 * [Google DNS](https://dns.google/)
 * [Shodan InternetDB](https://internetdb.shodan.io)
-* Supabase (Database)
+* [Supabase (Database)](https://supabase.com/dashboard/organizations)
 
 ### Extension Architecture
 
@@ -53,11 +53,16 @@ A cross-platform Chrome extension built to detect and flag phishing websites in 
 * `content script`
 * `background script`
 * `popup script`
+* `popup HTML`
+* `popup CSS`
+* `styles CSS`
+
 
 ### Development Tools
 
 * Visual Studio Code
 * GitHub
+* Supabase
 
 ---
 
